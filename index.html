@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Technology Solution Company - CRM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #222;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ====== HEADER ====== */
+        header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-bottom: 3px solid #0b63ce;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header-left img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(11, 99, 206, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .header-left img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .header-center {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-center h1 {
+            color: #d41f2d;
+            font-size: 32px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 8px;
+        }
+
+        .header-center p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .header-center .small {
+            font-size: 13px;
+            font-style: italic;
+            color: #333;
+        }
+
+        .header-right img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 3px solid #0b63ce;
+            box-shadow: 0 4px 8px rgba(11, 99, 206, 0.3);
+            transition: all 0.3s;
+        }
+
+        .header-right img:hover {
+            transform: scale(1.1);
+            border-color: #d41f2d;
+        }
+
+        /* ====== LANGUAGE TOGGLE ====== */
+        .lang-toggle {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            background: linear-gradient(90deg, #0b63ce, #2d66c3);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .lang-toggle button {
+            border: none;
+            background: none;
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .lang-toggle button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .lang-toggle button.active {
+            background: #003b82;
+            font-weight: bold;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* ====== TOGGLE BUTTON (mobile) ====== */
+        .toggle-btn {
+            display: none;
+            font-size: 28px;
+            background: linear-gradient(135deg, #0b63ce, #2d66c3);
+            border: none;
+            cursor: pointer;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* ====== NAVIGATION ====== */
+        nav {
+            background: linear-gradient(90deg, #3f78e0, #2d66c3, #1e4f9f);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 15px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        nav a {
+            margin: 8px 25px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+        }
+
+        nav a:hover, nav a.active {
+            color: #ffdf40;
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+                flex-direction: column;
+                text-align: center;
+            }
+            nav.show { 
+                display: flex; 
+                animation: slideDown 0.3s ease-out;
+            }
+            .toggle-btn { 
+                display: block; 
+                position: absolute; 
+                top: 20px; 
+                left: 20px; 
+            }
+            .header-center h1 { font-size: 24px; }
+            .lang-toggle { top: 90px; }
+            .header-left img { width: 60px; height: 60px; }
+            .header-right img { width: 50px; height: 50px; }
+        }
+
+        /* ====== MAIN CONTENT ====== */
+        main {
+            min-height: calc(100vh - 200px);
+            padding: 2rem;
+        }
+
+        .page {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ====== HERO SLIDESHOW ====== */
+        .hero {
+            position: relative;
+            height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 2rem;
+        }
+
+        .slide-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ====== SOCIAL LINKS ====== */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0b63ce, #2d66c3);
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: linear-gradient(135deg, #d41f2d, #ff4444);
+        }
+
+        /* ====== FORMS ====== */
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #0b63ce;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #d41f2d;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #222;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #0b63ce;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(11, 99, 206, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #0b63ce, #2d66c3);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(11, 99, 206, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #2d66c3, #1e4f9f);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 99, 206, 0.4);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ====== CUSTOMER LIST ====== */
+        .customer-list {
+            background: white;
+            border-radius: 15px;
+            overflow-x: auto;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: linear-gradient(135deg, #0b63ce, #2d66c3);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        /* ====== FILTER CONTROLS ====== */
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls input,
+        .filter-controls select {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* ====== SMS COMPOSER ====== */
+        .sms-composer {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .message-type {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .message-type button {
+            flex: 1;
+        }
+
+        .message-type button.active {
+            background: linear-gradient(135deg, #d41f2d, #ff4444);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .recipient-info {
+            background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid #0b63ce;
+        }
+
+        /* ====== LOADING & ALERTS ====== */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .loading i {
+            color: #0b63ce;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert.active {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        /* ====== FOOTER ====== */
+        footer {
+            background: linear-gradient(135deg, #1e4f9f, #0b63ce);
+            color: white;
+            padding: 25px 30px;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+            margin-top: 40px;
+        }
+
+        .developer-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .developer-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2d66c3, #0b63ce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .developer-contact p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .copyright {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        /* ====== SCROLL TO TOP ====== */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #d41f2d, #ff4444);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(212, 31, 45, 0.5);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(212, 31, 45, 0.7);
+        }
+
+        .scroll-top.show {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: 300px;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+            }
+
+            .developer-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ====== HEADER ====== -->
+    <header>
+        <button class="toggle-btn" id="menuToggle">☰</button>
+        <div class="header-left">
+            <img src="logo.png" alt="Company Logo">
+        </div>
+        <div class="header-center">
+            <h1>Go Technology Solution Company</h1>
+            <p>P.O.Box 22 - Ruvuma, Songea | Mob: 0655485784 / 0744065662<br>Email: gotechnology220@gmail.com</p>
+            <div class="small"><i>We take the future to you</i></div>
+        </div>
+        <div class="header-right">
+            <img src="dp.png" alt="Developer Photo">
+        </div>
+
+        <div class="lang-toggle">
+    <button id="enBtn" class="active">EN</button>
+    <button id="swBtn">SW</button>
+</div>
+        
+    </header>
+
+    <!-- ====== NAVIGATION ====== -->
+    <nav id="navbar">
+        <a href="#" class="nav-link active" data-page="home">🏠 Home</a>
+        <a href="#" class="nav-link" data-page="register">📝 Register Customer</a>
+        <a href="#" class="nav-link" data-page="admin">👤 Admin</a>
+        <a href="#" class="nav-link" data-page="sms">💬 Bulk SMS</a>
+    </nav>
+
+    <main>
+        <!-- ====== HOME PAGE ====== -->
+        <section id="home" class="page active">
+            <div class="hero">
+                <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                    <div class="slide-content">
+                        <h1>Professional IT Solutions</h1>
+                        <p>We provide top-notch services for all your technology needs</p>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                    <div class="slide-content">
+                        <h1>CCTV Installation</h1>
+                        <p>Secure your premises with our advanced surveillance systems</p>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                    <div class="slide-content">
+                        <h1>Computer Services</h1>
+                        <p>Repair, maintenance and setup for all computer systems</p>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1556656793-08538906a9f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                    <div class="slide-content">
+                        <h1>Network Solutions</h1>
+                        <p>Router setup and network configuration for optimal performance</p>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25856cd63?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                    <div class="slide-content">
+                        <h1>Time Attendance Systems</h1>
+                        <p>Efficient workforce management with modern time tracking</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+            </div>
+        </section>
+
+        <!-- ====== REGISTER PAGE ====== -->
+        <section id="register" class="page">
+            <div class="form-container">
+                <h2>Register New Customer</h2>
+                <div id="register-alert" class="alert"></div>
+                <form id="customer-form">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" pattern="[0-9]{10,}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="place">Place of Customer *</label>
+                        <input type="text" id="place" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Favorite Service *</label>
+                        <select id="service" required>
+                            <option value="">Select a service</option>
+                            <option value="CCTV">CCTV</option>
+                            <option value="Computer">Computer</option>
+                            <option value="Printer">Printer</option>
+                            <option value="Router">Router</option>
+                            <option value="Video Intercom">Video Intercom</option>
+                            <option value="Time Attendance">Time Attendance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Other Description</label>
+                        <textarea id="description"></textarea>
+                    </div>
+                    <button type="submit" id="submit-btn">Register Customer</button>
+                </form>
+                <div class="loading" id="register-loading">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <p>Registering customer...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== ADMIN PAGE ====== -->
+        <section id="admin" class="page">
+            <div class="form-container">
+                <h2>Admin Login</h2>
+                <div id="login-alert" class="alert"></div>
+                <form id="admin-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            
+            <div id="admin-dashboard" style="display: none;">
+                <h2>Customer Overview</h2>
+                <div class="filter-controls">
+                    <input type="text" id="search-name" placeholder="Search by name">
+                    <input type="text" id="search-place" placeholder="Search by place">
+                    <select id="search-service">
+                        <option value="">All Services</option>
+                        <option value="CCTV">CCTV</option>
+                        <option value="Computer">Computer</option>
+                        <option value="Printer">Printer</option>
+                        <option value="Router">Router</option>
+                        <option value="Video Intercom">Video Intercom</option>
+                        <option value="Time Attendance">Time Attendance</option>
+                    </select>
+                    <button id="apply-filter">Apply Filter</button>
+                    <button id="refresh-data">Refresh</button>
+                </div>
+                <div class="loading" id="admin-loading">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <p>Loading customers...</p>
+                </div>
+                <div class="customer-list">
+                    <table id="customer-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Place</th>
+                                <th>Service</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SMS PAGE ====== -->
+        <section id="sms" class="page">
+            <div class="sms-composer">
+                <h2>Bulk SMS Composer</h2>
+                <div id="sms-alert" class="alert"></div>
+                <div class="filter-controls">
+                    <select id="filter-place">
+                        <option value="">All Places</option>
+                    </select>
+                    <select id="filter-service">
+                        <option value="">All Services</option>
+                        <option value="CCTV">CCTV</option>
+                        <option value="Computer">Computer</option>
+                        <option value="Printer">Printer</option>
+                        <option value="Router">Router</option>
+                        <option value="Video Intercom">Video Intercom</option>
+                        <option value="Time Attendance">Time Attendance</option>
+                    </select>
+                    <button id="load-customers">Load Customers</button>
+                </div>
+                
+                <div class="message-type">
+                    <button id="normal-sms" class="active">Normal SMS</button>
+                    <button id="whatsapp-sms">WhatsApp Message</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" placeholder="Type your message here..."></textarea>
+                </div>
+                
+                <div class="recipient-info">
+                    <p><strong>Recipients:</strong> <span id="recipient-count">0</span> customers</p>
+                    <p><strong>Message Type:</strong> <span id="message-type-display">Normal SMS</span></p>
+                </div>
+                
+                <button id="send-message">Send Message</button>
+                <div class="loading" id="sms-loading">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <p>Loading customers...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="developer-info">
+            <div class="developer-pic">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="developer-contact">
+                <h3>Developed by: Go Technology Solution</h3>
+                <p><i class="fas fa-phone"></i> 0744065662</p>
+                <p><i class="fas fa-envelope"></i> yusuphlameck220@gmail.com</p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 Go Technology Solution Company. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- ====== SCROLL TO TOP ====== -->
+    <div class="scroll-top" id="scrollTop">↑</div>
+
+    <script>
+    // CONFIGURATION - Replace with your Google Apps Script Web App URL
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzo55onUQRkdizT0FOg749i5KvlsUUSyKTinWKKbi84ddc4rmvFhXkjtThoIZA2GEsU/exec';
+    
+    // Store customers data
+    let customersData = [];
+    let filteredCustomers = [];
+    
+    // ====== NAVIGATION ======
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetPage = this.getAttribute('data-page');
+            
+            document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+            
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(targetPage).classList.add('active');
+            
+            if (targetPage === 'sms') {
+                loadCustomersForSMS();
+            }
+        });
+    });
+
+    // ====== MOBILE TOGGLE ======
+    const toggleBtn = document.getElementById('menuToggle');
+    const nav = document.getElementById('navbar');
+    toggleBtn.addEventListener('click', () => {
+        nav.classList.toggle('show');
+    });
+
+    // ====== LANGUAGE TOGGLE ======
+    const enBtn = document.getElementById('enBtn');
+    const swBtn = document.getElementById('swBtn');
+
+    enBtn.addEventListener('click', () => {
+        enBtn.classList.add('active');
+        swBtn.classList.remove('active');
+        showNotification("Language switched to English");
+    });
+
+    swBtn.addEventListener('click', () => {
+        swBtn.classList.add('active');
+        enBtn.classList.remove('active');
+        showNotification("Lugha imebadilishwa kuwa Kiswahili");
+    });
+
+    // ====== NOTIFICATION SYSTEM ======
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #0b63ce, #2d66c3);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            animation: slideInRight 0.3s ease-out;
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // ====== IMAGE SLIDER ======
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[index].classList.add('active');
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    setInterval(nextSlide, 5000);
+    
+    // ====== ALERT FUNCTIONS ======
+    function showAlert(elementId, message, type) {
+        const alert = document.getElementById(elementId);
+        alert.textContent = message;
+        alert.className = `alert ${type} active`;
+        setTimeout(() => alert.classList.remove('active'), 5000);
+    }
+    
+    // ====== CUSTOMER REGISTRATION (FIXED) ======
+    document.getElementById('customer-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const loading = document.getElementById('register-loading');
+        
+        submitBtn.disabled = true;
+        loading.classList.add('active');
+        
+        const customer = {
+            action: 'addCustomer',
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            place: document.getElementById('place').value.trim(),
+            service: document.getElementById('service').value,
+            description: document.getElementById('description').value.trim()
+        };
+        
+        try {
+            // Create URL with parameters for GET request
+            const params = new URLSearchParams(customer);
+            const response = await fetch(SCRIPT_URL + '?' + params.toString(), {
+                method: 'GET',
+                redirect: 'follow'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert('register-alert', 'Customer registered successfully!', 'alert-success');
+                this.reset();
+            } else {
+                showAlert('register-alert', result.error || 'Registration failed', 'alert-error');
+            }
+        } catch (error) {
+            showAlert('register-alert', 'Error: ' + error.message, 'alert-error');
+            console.error('Registration error:', error);
+        } finally {
+            submitBtn.disabled = false;
+            loading.classList.remove('active');
+        }
+    });
+    
+    // ====== ADMIN LOGIN ======
+    document.getElementById('admin-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        if (username === 'admin' && password === 'admin123') {
+            document.getElementById('admin-form').parentElement.style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'block';
+            loadCustomers();
+        } else {
+            showAlert('login-alert', 'Invalid credentials!', 'alert-error');
+        }
+    });
+    
+    // ====== LOAD CUSTOMERS FOR ADMIN VIEW (FIXED) ======
+    async function loadCustomers() {
+        const loading = document.getElementById('admin-loading');
+        loading.classList.add('active');
+        
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=getCustomers`, {
+                method: 'GET',
+                redirect: 'follow'
+            });
+            
+            const result = await response.json();
+            
+            if (Array.isArray(result)) {
+                customersData = result;
+                displayCustomers(customersData);
+            } else {
+                console.error('Invalid data format:', result);
+                showAlert('login-alert', 'Error loading customers', 'alert-error');
+            }
+        } catch (error) {
+            console.error('Error loading customers:', error);
+            showAlert('login-alert', 'Error loading customers: ' + error.message, 'alert-error');
+        } finally {
+            loading.classList.remove('active');
+        }
+    }
+    
+    function displayCustomers(customers) {
+        const tableBody = document.querySelector('#customer-table tbody');
+        tableBody.innerHTML = '';
+        
+        if (customers.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No customers found</td></tr>';
+            return;
+        }
+        
+        customers.forEach(customer => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${customer.firstName} ${customer.lastName}</td>
+                <td>${customer.phone}</td>
+                <td>${customer.place}</td>
+                <td>${customer.service}</td>
+                <td>${customer.description || '-'}</td>
+                <td>${customer.date || '-'}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+    
+    // ====== FILTER CUSTOMERS ======
+    document.getElementById('apply-filter').addEventListener('click', function() {
+        const nameFilter = document.getElementById('search-name').value.toLowerCase();
+        const placeFilter = document.getElementById('search-place').value.toLowerCase();
+        const serviceFilter = document.getElementById('search-service').value;
+        
+        const filtered = customersData.filter(customer => {
+            const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+            const matchName = !nameFilter || fullName.includes(nameFilter);
+            const matchPlace = !placeFilter || customer.place.toLowerCase().includes(placeFilter);
+            const matchService = !serviceFilter || customer.service === serviceFilter;
+            return matchName && matchPlace && matchService;
+        });
+        
+        displayCustomers(filtered);
+    });
+    
+    document.getElementById('refresh-data').addEventListener('click', loadCustomers);
+    
+    // ====== SMS COMPOSER ======
+    document.getElementById('normal-sms').addEventListener('click', function() {
+        document.getElementById('normal-sms').classList.add('active');
+        document.getElementById('whatsapp-sms').classList.remove('active');
+        document.getElementById('message-type-display').textContent = 'Normal SMS';
+    });
+    
+    document.getElementById('whatsapp-sms').addEventListener('click', function() {
+        document.getElementById('whatsapp-sms').classList.add('active');
+        document.getElementById('normal-sms').classList.remove('active');
+        document.getElementById('message-type-display').textContent = 'WhatsApp Message';
+    });
+    
+    async function loadCustomersForSMS() {
+        const loading = document.getElementById('sms-loading');
+        loading.classList.add('active');
+        
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=getCustomers`, {
+                method: 'GET',
+                redirect: 'follow'
+            });
+            
+            const result = await response.json();
+            
+            if (Array.isArray(result)) {
+                customersData = result;
+                populatePlaceFilter();
+            }
+        } catch (error) {
+            console.error('Error loading customers:', error);
+        } finally {
+            loading.classList.remove('active');
+        }
+    }
+    
+    document.getElementById('load-customers').addEventListener('click', function() {
+        const placeFilter = document.getElementById('filter-place').value;
+        const serviceFilter = document.getElementById('filter-service').value;
+        
+        filteredCustomers = customersData.filter(customer => {
+            const matchPlace = !placeFilter || customer.place === placeFilter;
+            const matchService = !serviceFilter || customer.service === serviceFilter;
+            return matchPlace && matchService;
+        });
+        
+        document.getElementById('recipient-count').textContent = filteredCustomers.length;
+    });
+    
+    document.getElementById('send-message').addEventListener('click', function() {
+        const message = document.getElementById('message').value.trim();
+        const messageType = document.getElementById('normal-sms').classList.contains('active') ? 'SMS' : 'WhatsApp';
+        
+        if (!message) {
+            showAlert('sms-alert', 'Please enter a message', 'alert-error');
+            return;
+        }
+        
+        if (filteredCustomers.length === 0) {
+            showAlert('sms-alert', 'Please load customers first', 'alert-error');
+            return;
+        }
+        
+        const phones = filteredCustomers.map(c => c.phone).join(', ');
+        showAlert('sms-alert', `Ready to send ${messageType} to ${filteredCustomers.length} customers`, 'alert-success');
+        console.log('Message:', message);
+        console.log('Recipients:', phones);
+    });
+    
+    function populatePlaceFilter() {
+        const places = [...new Set(customersData.map(c => c.place))];
+        const placeFilter = document.getElementById('filter-place');
+        placeFilter.innerHTML = '<option value="">All Places</option>';
+        
+        places.forEach(place => {
+            const option = document.createElement('option');
+            option.value = place;
+            option.textContent = place;
+            placeFilter.appendChild(option);
+        });
+    }
+
+    // ====== SCROLL TO TOP ======
+    const scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            scrollTopBtn.classList.add('show');
+        } else {
+            scrollTopBtn.classList.remove('show');
+        }
+    });
+
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ====== ADD CSS ANIMATIONS ======
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // ====== TEST CONNECTION ON PAGE LOAD ======
+    window.addEventListener('load', async function() {
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=test`);
+            const result = await response.json();
+            console.log('Connection test:', result);
+        } catch (error) {
+            console.error('Connection error:', error);
+        }
+    });
+</script>
+</body>
+</html>

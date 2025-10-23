@@ -1,0 +1,246 @@
+# GoTech CRM - Complete Setup Guide
+
+## Overview
+This guide will help you set up the GoTech CRM system with Google Sheets integration for reliable data storage and retrieval.
+
+---
+
+## Part 1: Google Sheets Setup
+
+### Step 1: Create a New Google Sheet
+1. Go to [Google Sheets](https://sheets.google.com)
+2. Click **"Blank"** to create a new spreadsheet
+3. Rename it to **"GoTech CRM Database"**
+4. Copy the **Sheet ID** from the URL:
+   ```
+   https://docs.google.com/spreadsheets/d/[SHEET_ID]/edit
+   ```
+   The SHEET_ID is the long string between `/d/` and `/edit`
+
+### Step 2: Note the Sheet Name
+- The default sheet name is "Sheet1"
+- You can rename it to "Customers" if you prefer
+- Remember this name for the Apps Script configuration
+
+---
+
+## Part 2: Google Apps Script Setup
+
+### Step 1: Create Apps Script Project
+1. In your Google Sheet, click **Extensions > Apps Script**
+2. Delete any existing code in the editor
+3. Copy the entire **Code.gs** content I provided
+4. Paste it into the Apps Script editor
+
+### Step 2: Configure the Script
+Update these two lines at the top of the script:
+```javascript
+const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID_HERE';  // Paste your Sheet ID
+const SHEET_NAME = 'Customers';  // Your sheet name
+```
+
+### Step 3: Save and Test
+1. Click the **Save** icon (💾)
+2. Name your project: **"GoTech CRM Backend"**
+3. Run the `testAddCustomer` function to test:
+   - Click the function dropdown (next to Debug)
+   - Select `testAddCustomer`
+   - Click **Run**
+   - Authorize the script when prompted
+   - Check your Google Sheet - it should have a test customer
+
+### Step 4: Deploy as Web App
+1. Click **Deploy > New deployment**
+2. Click the gear icon ⚙️ and select **"Web app"**
+3. Configure the deployment:
+   - **Description**: "GoTech CRM API v1"
+   - **Execute as**: "Me"
+   - **Who has access**: "Anyone"
+4. Click **Deploy**
+5. **IMPORTANT**: Copy the **Web app URL** - you'll need this!
+   ```
+   Example: https://script.google.com/macros/s/ABC123.../exec
+   ```
+
+---
+
+## Part 3: HTML Web App Setup
+
+### Step 1: Update the HTML File
+1. Open the HTML file I provided
+2. Find this line near the top of the `<script>` section:
+   ```javascript
+   const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+   ```
+3. Replace it with your Web App URL:
+   ```javascript
+   const SCRIPT_URL = 'https://script.google.com/macros/s/ABC123.../exec';
+   ```
+
+### Step 2: Deploy Your Website
+Choose one of these hosting options:
+
+#### Option A: GitHub Pages (Free & Easy)
+1. Create a GitHub account if you don't have one
+2. Create a new repository named "gotech-crm"
+3. Upload your HTML file (rename it to `index.html`)
+4. Go to Settings > Pages
+5. Select main branch and save
+6. Your site will be live at: `https://yourusername.github.io/gotech-crm`
+
+#### Option B: Google Sites
+1. Go to [Google Sites](https://sites.google.com)
+2. Create a new site
+3. Add an "Embed" component
+4. Paste your HTML code
+5. Publish the site
+
+#### Option C: Netlify (Free)
+1. Go to [Netlify](https://www.netlify.com)
+2. Drag and drop your HTML file
+3. Your site goes live instantly
+
+---
+
+## Part 4: Testing the System
+
+### Test Customer Registration
+1. Open your website
+2. Click **"Register Customer"**
+3. Fill in all required fields
+4. Click **"Register Customer"**
+5. Check your Google Sheet - the customer should appear
+
+### Test Admin Panel
+1. Click **"Admin Login"**
+2. Username: `admin`
+3. Password: `admin123`
+4. You should see all registered customers
+5. Test the search filters
+
+### Test Bulk SMS
+1. Click **"Bulk SMS"**
+2. Select filters (place/service)
+3. Click **"Load Customers"**
+4. Type a message
+5. Check recipient count
+
+---
+
+## Part 5: Security Improvements
+
+### Update Admin Password
+In the HTML file, find this section:
+```javascript
+if (username === 'admin' && password === 'admin123') {
+```
+Change `'admin123'` to a secure password of your choice.
+
+### Protect Your Apps Script
+For production use, consider:
+1. Changing "Who has access" to "Anyone with Google account"
+2. Adding authentication tokens
+3. Implementing rate limiting
+
+---
+
+## Part 6: Customization
+
+### Add More Services
+In both files, find the service options and add your own:
+```html
+<option value="New Service">New Service</option>
+```
+
+### Change Colors
+In the CSS section, modify these variables:
+```css
+:root {
+    --primary: #2c3e50;    /* Dark blue */
+    --secondary: #3498db;  /* Light blue */
+    --accent: #e74c3c;     /* Red */
+}
+```
+
+### Add More Fields
+1. **In Google Sheet**: Add new column headers
+2. **In Apps Script**: Update the `addCustomer` and `getCustomers` functions
+3. **In HTML**: Add new form fields
+
+---
+
+## Troubleshooting
+
+### Customers Not Saving
+- ✅ Check that SHEET_ID is correct
+- ✅ Check that SCRIPT_URL is correct
+- ✅ Verify Apps Script is deployed as "Anyone"
+- ✅ Check browser console for errors (F12)
+
+### Admin Panel Not Loading Data
+- ✅ Make sure you're using the correct Script URL
+- ✅ Check if doGet function is working by visiting: `YOUR_SCRIPT_URL?action=getCustomers`
+- ✅ Look for CORS errors in browser console
+
+### Script Authorization Issues
+- ✅ Run the test function from Apps Script editor
+- ✅ Complete the authorization flow
+- ✅ Make sure you're signed in to Google
+
+---
+
+## Features Included
+
+✅ Customer registration with validation  
+✅ Secure admin login  
+✅ Customer search and filtering  
+✅ Bulk SMS composer  
+✅ Place and service filters  
+✅ Automatic timestamp tracking  
+✅ Responsive design for mobile  
+✅ Loading indicators  
+✅ Success/error alerts  
+✅ Data persistence in Google Sheets  
+
+---
+
+## Next Steps
+
+### SMS Integration (Optional)
+To actually send SMS, integrate with:
+- **Africa's Talking API** (popular in Tanzania)
+- **Twilio**
+- **Infobip**
+
+### WhatsApp Integration (Optional)
+Use:
+- **WhatsApp Business API**
+- **Twilio WhatsApp API**
+- **Africa's Talking WhatsApp**
+
+### Email Notifications
+Add Gmail integration using Apps Script's `MailApp` service.
+
+---
+
+## Support
+
+For issues or questions:
+- 📧 Email: yusuphlameck220@gmail.com
+- 📱 Phone: 0744065662
+
+---
+
+## License
+
+© 2024 Go Technology Solution Company. All rights reserved.
+
+---
+
+## Changelog
+
+**v1.0** - Initial release
+- Customer registration
+- Admin dashboard
+- Bulk SMS composer
+- Google Sheets integration
